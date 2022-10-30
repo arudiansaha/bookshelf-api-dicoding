@@ -15,7 +15,9 @@ const init = async () => {
   server.route(routes);
 
   await server.start();
+  /* eslint-disable */
   console.log(`Server berjalan pada: ${server.info.uri}`);
+  /* eslint-disable */
 };
 
 init();
