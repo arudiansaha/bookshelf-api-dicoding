@@ -81,23 +81,20 @@ const addBookHandler = (request, h) => {
 
 const getAllBooksHandler = (request, h) => {
   const params = request.query;
-
   const hasProperty = Object.prototype.hasOwnProperty;
 
-  const isFinishedParams = hasProperty.call(params, 'finished');
-  const isReadingParams = hasProperty.call(params, 'reading');
-  const isNameParams = hasProperty.call(params, 'name');
+  const hasFinishedQuery = hasProperty.call(params, 'finished');
+  const hasReadingQuery = hasProperty.call(params, 'reading');
+  const hasNameQuery = hasProperty.call(params, 'name');
 
-  const isFinished = params.finished === '1';
-  const isReading = params.reading === '1';
-
-  if (isFinishedParams) {
-    const finishedBook = books.filter((book) => book.finished === isFinished);
+  if (hasFinishedQuery) {
+    const isFinished = params.finished === '1';
+    const finishedBooks = books.filter((book) => book.finished === isFinished);
 
     const response = h.response({
       status: 'success',
       data: {
-        books: finishedBook.map(({ id, name, publisher }) => ({ id, name, publisher })),
+        books: finishedBooks.map(({ id, name, publisher }) => ({ id, name, publisher })),
       },
     });
 
@@ -105,13 +102,14 @@ const getAllBooksHandler = (request, h) => {
     return response;
   }
 
-  if (isReadingParams) {
-    const readingBook = books.filter((book) => book.reading === isReading);
+  if (hasReadingQuery) {
+    const isReading = params.reading === '1';
+    const readingBooks = books.filter((book) => book.reading === isReading);
 
     const response = h.response({
       status: 'success',
       data: {
-        books: readingBook.map(({ id, name, publisher }) => ({ id, name, publisher })),
+        books: readingBooks.map(({ id, name, publisher }) => ({ id, name, publisher })),
       },
     });
 
@@ -119,14 +117,14 @@ const getAllBooksHandler = (request, h) => {
     return response;
   }
 
-  if (isNameParams) {
-    const lowerName = params.name.toLowerCase();
-    const bookName = books.filter((b) => b.publisher.toLowerCase().includes(lowerName));
+  if (hasNameQuery) {
+    const nameToLowerCase = params.name.toLowerCase();
+    const booksName = books.filter((b) => b.name.toLowerCase().includes(nameToLowerCase));
 
     const response = h.response({
       status: 'success',
       data: {
-        books: bookName.map(({ id, name, publisher }) => ({ id, name, publisher })),
+        books: booksName.map(({ id, name, publisher }) => ({ id, name, publisher })),
       },
     });
 
